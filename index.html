@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>2d Engine</title>
+<meta charset="utf-8" />
+</head>
+<body>
+	<img id="back1" src="Dev Tools/background1.png">
+	<img id="sprite1" src="Dev Tools/sprite1.png">
+	<img id="sprite2" src="Dev Tools/sprite2.png">
+<div id="date"></div>
+<canvas id="imgcanvas" width="400" height="250"></canvas>
+</body>
+<script type="text/javascript">
+
+
+
+window.onload=function() {
+
+var imgcanvas = document.getElementById("imgcanvas");
+var sprite0 = document.getElementById("sprite1");
+var sprite1 = document.getElementById("sprite2");
+var sound1 = document.getElementById("");
+var bg = document.getElementById("back1");
+if (imgcanvas.getContext) {
+	var ctx = imgcanvas.getContext('2d');
+	ctx.fillStyle="rgba(255,0,0,.1)";
+	ctx.strokeStyle="#000000";
+
+
+//INPUT SYSTEMS
+window.addEventListener('keydown', (event) =>{
+	console.log(event);
+	if (event.key === 'd' || event.key === 'ArrowRight') {
+	  player.x += player.speed;
+	  grace.x += grace.speed; 
+	};
+	if (event.key === 'a' || event.key === 'ArrowLeft') {
+	  player.x -= player.speed;
+	  grace.x -= grace.speed;
+	};
+	if (event.key === 's' || event.key === 'ArrowDown') {
+	  player.y += player.speed;
+	  grace.y += grace.speed;
+	};
+	if (event.key === 'w' || event.key === 'ArrowUp') {
+	   player.y-= player.speed;
+	   grace.y-= grace.speed;
+	};
+});
+
+//SOUND OUTPUT SYSTEM
+/*var soundSystem = {
+};*/
+//GRAPHICS OUTPUT SYSTEM
+var graphicsSystem = {
+
+	clearCanvas : function() {
+					ctx.fillStyle = "rgba(255, 255, 255, 1)";
+					ctx.fillRect(0, 0, 400, 250);},
+
+	drawSquare : function(hPos, vPos, width, height, red,green, blue, alpha) {
+					ctx.fillStyle ="rgba("+ red +","+green+", "+blue+","+alpha+")";
+					ctx.fillRect(hPos, vPos, width, height);
+					ctx.strokeRect(hPos, vPos, width, height);},
+
+	drawSprite : function(sprite, Posx, Posy, width, height) {
+					ctx.drawImage(sprite, Posx, Posy, width, height);}
+};
+
+//BASIC BACKGROUND OBJECT
+function bgObject (x, y, sprite, width, height, scrollH, speed) {
+	this.x =x;
+	this.y =y;
+	this.sprite = sprite;
+	this.width = width;
+	this.height = height;
+	this.scrollH = scrollH;
+	this.speed = speed;
+	this.initiate = function() {
+		if (this.scrollH ==true) {
+			if (this.x <0 && this.x > -this.width) {
+				graphicsSystem.drawSprite(this.sprite, this.width+this.x-this.speed, this.y, this.width, this.height);
+			}else if (this.x <= -this.width ) {
+				this.x =0;
+				graphicsSystem.drawSprite(this.sprite, this.width+this.x-this.speed, this.y, this.width, this.height);
+			} else {
+			graphicsSystem.drawSprite(this.sprite, this.x-this.speed, this.y, this.width, this.height);}
+			this.x -=this.speed;
+		};
+		graphicsSystem.drawSprite(this.sprite, this.x, this.y, this.width, this.height);
+};
+};
+
+//BASIC GAMEOBJECT
+function gameObject(x, y, sprite, width, height, speed) {
+  this.x = x;
+  this.y = y;
+  this.sprite = sprite;
+  this.width = width;
+  this.height = height;
+  this.speed = speed;
+  this.collisionCheck = function () {}
+  this.initiate = function() {graphicsSystem.drawSprite(this.sprite, this.x, this.y, this.width, this.height);} 
+};
+
+//GAME INITIALISATION
+var bg1 = new bgObject(0, 0, bg, 400, 250);
+var player = new gameObject( 190, 100, sprite0, 20, 20, 2);
+var grace = new gameObject(200, 50, sprite1, 20, 20, 4);
+
+
+//RUNTIME FUNCTION
+function runtime2d() {
+	graphicsSystem.clearCanvas();
+	bg1.initiate();
+	grace.initiate();
+	player.initiate();
+	if (player.x < grace.x + grace.width &&
+   player.x + player.width > grace.x &&
+   player.y < grace.y + grace.height &&
+   player.y + player.height > grace.y) {
+    // collision detected!
+	console.log('collision detected!');
+	if (player.x < grace.x + grace.width &&
+   player.x + player.width > grace.x) {
+		player.x = player.width;
+		grace.x = grace.x;
+	}
+
+}
+
+};
+
+//MAIN LOOP FUNCTION
+setInterval(runtime2d, 50);
+};
+};
+
+
+</script>
+</html>
