@@ -50,6 +50,18 @@ window.addEventListener('keydown', (event) =>{
 	};
 });
 
+//VECTOR ENGINE
+class VECTOR {
+	constructor(x_, y_) {
+		this.x = x_;
+		this.y = y_;
+	}
+	static add(v) {
+		this.x += v.x;
+		this.y += v.y;
+	}
+};
+
 //SOUND OUTPUT SYSTEM
 /*var soundSystem = {
 };*/
@@ -68,6 +80,27 @@ var graphicsSystem = {
 	drawSprite : function(sprite, Posx, Posy, width, height) {
 					ctx.drawImage(sprite, Posx, Posy, width, height);}
 };
+
+///PARTICLE SYSTEM///
+
+	//PARTICLE//
+function particle(posx, posy) {
+		position = new VECTOR;
+		Velocity = new VECTOR;
+		acceleration = new VECTOR;
+
+		this.position = new VECTOR(posx, posy);
+		this.Velocity = new VECTOR(Math.random(1,5), Math.random(1,5));
+		this.acceleration = new VECTOR(0, 0.05);
+		graphicsSystem.drawSquare(this.position.x, this.position.y, 10, 10, 0,0,0,1);
+
+		this.run = function() {
+			Velocity.add(acceleration);
+			this.position.add(Velocity);
+			graphicsSystem.drawSquare(this.position.x, this.position.y, 10,10, 0,0,0,1);
+		}
+		
+	};
 
 //BASIC BACKGROUND OBJECT
 function bgObject (x, y, sprite, width, height, scrollH, speed) {
@@ -107,9 +140,9 @@ function gameObject(x, y, sprite, width, height, speed) {
 
 //GAME INITIALISATION
 var bg1 = new bgObject(0, 0, bg, 400, 250);
-var player = new gameObject( 190, 100, sprite0, 20, 20, 2);
+var player = new gameObject(190, 100, sprite0, 20, 20, 2);
 var grace = new gameObject(200, 50, sprite1, 20, 20, 4);
-
+var p = new particle(180,120);
 
 //RUNTIME FUNCTION
 function runtime2d() {
@@ -117,25 +150,13 @@ function runtime2d() {
 	bg1.initiate();
 	grace.initiate();
 	player.initiate();
-	if (player.x < grace.x + grace.width &&
-   player.x + player.width > grace.x &&
-   player.y < grace.y + grace.height &&
-   player.y + player.height > grace.y) {
-    // collision detected!
-	console.log('collision detected!');
-	if (player.x < grace.x + grace.width &&
-   player.x + player.width > grace.x) {
-		player.x = player.width;
-		grace.x = grace.x;
-	}
-
+	p.run();
 }
 
 };
 
 //MAIN LOOP FUNCTION
 setInterval(runtime2d, 50);
-};
 };
 
 
