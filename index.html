@@ -3,34 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS2Dengine Scene Editor</title>
+    <title>Scene Editor</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="scene-editor">
+    <div class="container">
+        <div class="sidebar">
+            <div class="toolbox">
+                <h2>Sprite Library</h2>
+                <!-- Sprite library content goes here -->
+            </div>
+            <div class="inspector">
+                <h2>Inspector Panel</h2>
+                <!-- Inspector panel content goes here -->
+            </div>
+        </div>
+        <div class="canvas-area">
+            <canvas id="sceneCanvas"></canvas>
+            <!-- Additional canvas elements for interactive areas, if needed -->
+        </div>
         <div class="toolbar">
-            <button id="add-scene-btn">Add Scene</button>
-            <select id="scene-select">
-                <option value="scene1">Scene 1</option>
-                <option value="scene2">Scene 2</option>
-                <!-- Add more scenes dynamically if needed -->
-            </select>
-            <button id="delete-scene-btn">Delete Scene</button>
+            <h2>Toolbox</h2>
+            <!-- Toolbox content goes here -->
         </div>
-        <div class="background-upload">
-            <label for="background-input">Upload Background Image:</label>
-            <input type="file" id="background-input" accept="image/*">
-        </div>
-        <div class="layer-management">
-            <h3>Layer Management</h3>
-            <ul id="layer-list">
-                <!-- Layer list will be populated dynamically -->
-            </ul>
-            <button id="add-layer-btn">Add Layer</button>
-            <button id="delete-layer-btn">Delete Layer</button>
-        </div>
-        <canvas id="scene-canvas" width="800" height="600"></canvas>
     </div>
+    <script src="enginecore.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
