@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#scene-editor {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.toolbar {
+    margin-bottom: 20px;
+}
+
+#scene-select, #background-input {
+    margin-right: 10px;
+}
+
+.layer-management {
+    margin-bottom: 20px;
+}
+
+#layer-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#layer-list li {
+    margin-bottom: 5px;
+}
+
+canvas {
+    border: 1px solid #ccc;
+    display: block;
+    margin: 0 auto;
+}
+
+.button {
+    display: inline-block;
+    padding: 8px 12px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.background-upload label {
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.background-upload label:hover {
+    background-color: #0056b3;
+}
