@@ -9,25 +9,29 @@
 <body>
     <div class="container">
         <div class="sidebar">
-            <div class="toolbox">
+            <div class="toolbox" id="toolbox">
                 <h2>Sprite Library</h2>
                 <!-- Sprite library content goes here -->
             </div>
-            <div class="inspector">
+            <div class="inspector" id="inspector">
                 <h2>Inspector Panel</h2>
                 <!-- Inspector panel content goes here -->
             </div>
         </div>
-        <div class="canvas-area">
+        <div class="canvas-area" style="display: flex;flex-direction: column;">
             <canvas id="sceneCanvas"></canvas>
             <!-- Additional canvas elements for interactive areas, if needed -->
+            <div style="display: flex;flex-direction: row; margin:8px;">
+            <button>Run Game</button>
+            <button>Stop game</button>
         </div>
-        <div class="toolbar">
+        </div>
+        <div class="toolbar" id="toolbar">
             <h2>Toolbox</h2>
             <!-- Toolbox content goes here -->
         </div>
     </div>
-    <script src="enginecore.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="enginecore.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

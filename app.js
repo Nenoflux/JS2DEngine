@@ -1,30 +1,48 @@
 // Import EngineCore namespace
 import { EngineCore } from './enginecore.js';
 
-// Initialize EngineCore modules
-EngineCore.init('sceneCanvas');
 
 // Define canvas-related functions for the scene editor
+// Scene Editor Logic
 const SceneEditor = {
+    currentScene: null,
+    selectedSprite: null,
+    selectedInteractiveArea: null,
+
     init: function() {
-        // Add initialization code here
+        // Load initial scene if needed
+        this.setupCanvas();
+        this.setupToolbox();
+        this.setupInspector();
+        this.setupScriptEditor();
     },
 
-    // Function to load a background image into the canvas
-    loadBackground: function(imagePath) {
-        const background = new Image();
-        background.onload = () => {
-            EngineCore.SceneManager.currentScene.background = background;
-        };
-        background.onerror = () => {
-            console.error(`Failed to load background image '${imagePath}'.`);
-        };
-        background.src = imagePath;
-    }
-};
+    setupCanvas: function() {
+        // Add click handlers for selecting sprites, creating interactive areas, etc.
+        EngineCore.init('sceneCanvas', 'MyNewGame');
+        EngineCore.startScene(this.currentScene);
+
+    },
+
+    setupToolbox: function() {
+        // Load sprites from EngineCore.AssetManager
+        
+
+    },
+
+    setupInspector: function() {
+        // Logic to update the inspector based on selection
+
+    },
+
+    setupScriptEditor: function() {
+        // UI for creating and editing scripts (tied to interactive areas)
+    },
+
+}
 
 // Initialize scene editor
 SceneEditor.init();
 
 // Example usage:
-SceneEditor.loadBackground('background.jpg');
+SceneEditorUI.loadBackground('Dev Tools/background1.png');
