@@ -1,40 +1,132 @@
-body, html {
+/* Color Scheme */
+:root {
+    --green: #008000;
+    --blue: #87CEEB;
+    --yellow: #FFD700;
+    --brown: #A52A2A;
+    --light-gray: #D3D3D3;
+}
+
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100%;
+    background-color: var(--light-gray);
 }
 
 .container {
-    display: flex;
-    height: 100%;
-}
-
-.sidebar {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
-    background-color: #f0f0f0;
 }
 
-.canvas-area {
-    flex: 3;
+h1, h2, h3 {
+    color: var(--green);
+}
+
+/* Scene Editor */
+#sceneEditor {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
+}
+
+#canvasArea {
+    position: relative;
+    border: 2px solid var(--blue);
+    width: 70%;
+    margin-bottom: 20px;
 }
 
 canvas {
-    border: 1px solid #000;
-    background-color: #fff;
-    max-width: 100%;
-    max-height: 100%;
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--brown);
+    background-color: white;
 }
 
-.toolbar {
+#selectionIndicator {
+    position: absolute;
+    border: 2px dashed var(--yellow);
+    pointer-events: none;
+}
+
+#toolbox {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background-color: #f0f0f0;
+    margin-right: 20px;
+}
+
+#spriteLibrary {
+    border: 2px solid var(--green);
+    border-radius: 10px;
+    padding: 15px;
+    background-color: white;
+}
+
+#spriteLibrary h2 {
+    color: var(--green);
+}
+
+#inspector {
+    flex: 1;
+}
+
+/* Form Styling */
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--green);
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--green);
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005c99;
+}
+
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--green);
+    border-radius: 5px;
+    background-color: white;
+    color: var(--green);
+}
+
+/* Mobile Responsiveness */
+@media only screen and (max-width: 768px) {
+    #sceneEditor {
+        flex-direction: column;
+    }
+
+    #toolbox {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    #inspector {
+        order: -1;
+    }
 }

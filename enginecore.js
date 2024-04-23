@@ -1,6 +1,124 @@
 // Define the EngineCore namespace
 const EngineCore = {};
 
+class Game {
+    constructor(name) {
+        this.name = name;
+        this.scenes = [];
+        this.activeSceneIndex = -1; // No active scene initially
+        this.scriptEngine = new ScriptEngine();
+        this.assets = {}; // Container for game assets
+        this.renderer = null; // Reference to the renderer
+    }
+
+    // Add a scene to the game
+    addScene(scene) {
+        this.scenes.push(scene);
+    }
+
+    // Set the active scene by index
+    setActiveScene(index) {
+        if (index >= 0 && index < this.scenes.length) {
+            this.activeSceneIndex = index;
+            EngineCore.SceneManager.loadScene(this.scenes[index].name); // Load the active scene
+        } else {
+            console.error("Invalid scene index");
+        }
+    }
+
+    // Set the active scene by name
+    setActiveSceneByName(name) {
+        const index = this.scenes.findIndex(scene => scene.name === name);
+        if (index !== -1) {
+            this.setActiveScene(index);
+        } else {
+            console.error(`Scene with name '${name}' not found.`);
+        }
+    }
+
+    // Update the game logic
+    update() {
+        // Execute game logic updates
+        this.scenes.forEach(scene => {
+            scene.update(); // Update scene-specific logic
+        });
+
+        // Add more advanced game-wide logic here if needed
+    }
+
+    // Render the game
+    render() {
+        if (this.activeSceneIndex !== -1 && this.renderer) {
+            this.scenes[this.activeSceneIndex].render(this.renderer);
+        }
+    }
+
+    // Handle mouse down event
+    handleMouseDown(x, y) {
+        if (this.activeSceneIndex !== -1) {
+            this.scenes[this.activeSceneIndex].handleMouseDown(x, y);
+        }
+    }
+
+    // Handle key down event
+    handleKeyDown(key) {
+        if (this.activeSceneIndex !== -1) {
+            this.scenes[this.activeSceneIndex].handleKeyDown(key);
+        }
+    }
+
+    // Load game data from a compatible format (e.g., JSON)
+    loadGameData(data) {
+        // Deserialize game data and populate the game object
+        this.scenes = data.scenes.map(sceneData => {
+            const scene = new Scene(sceneData.name);
+            // Deserialize scene-specific data (e.g., layers, sprites) and add them to the scene
+            return scene;
+        });
+        // Load additional game data if needed
+    }
+
+    // Export game data to a compatible format (e.g., JSON)
+    exportGameData() {
+        // Serialize game data into a format that can be saved or exported
+        const serializedScenes = this.scenes.map(scene => scene.serialize());
+        return { scenes: serializedScenes };
+    }
+
+    // Load game assets
+    loadAssets(assetData) {
+        // Load assets into the game using Engine
+        for (const assetName in assetData) {
+            if (assetData.hasOwnProperty(assetName)) {
+                const asset = assetData[assetName];
+                if (asset.type === 'image') {
+                    this.assets[assetName] = new Image();
+                    this.assets[assetName].src = asset.src;
+                } else if (asset.type === 'sound') {
+                    this.assets[assetName] = new Sound(asset.src);
+                }
+            }
+        }
+    }
+
+    // Initialize game renderer
+    initRenderer(canvasId) {
+        this.renderer = EngineCore.Renderer;
+        EngineCore.Renderer.init(canvasId);
+    }
+
+    // Start the game loop
+    start() {
+        function gameLoop() {
+            EngineCore.InputManager.update();
+            EngineCore.GameLogic.update();
+            this.render(); // Render the game
+            requestAnimationFrame(gameLoop);
+        }
+        gameLoop();
+    }
+}
+
 // Renderer module
 EngineCore.Renderer = {
     init: function(canvasId) {
@@ -26,31 +144,6 @@ EngineCore.Renderer = {
         this.context.drawImage(sprite.image, sprite.x, sprite.y, sprite.width, sprite.height);
     }
 };
-
-// Scene Layer class
-class SceneLayer {
-    constructor(name) {
-        this.name = name;
-        this.sprites = [];
-    }
-
-    addSprite(sprite) {
-        this.sprites.push(sprite);
-    }
-
-    removeSprite(sprite) {
-        const index = this.sprites.indexOf(sprite);
-        if (index !== -1) {
-            this.sprites.splice(index, 1);
-        }
-    }
-
-    render(renderer) {
-        this.sprites.forEach(sprite => {
-            renderer.drawSprite(sprite);
-        });
-    }
-}
 
 // Sprite class
 class Sprite {
@@ -83,6 +176,51 @@ class Sprite {
 
     rotate(angle) {
         // Implement rotation logic if needed
+    }
+}
+
+//sound class
+class Sound {
+    constructor(src) {
+        this.sound = document.createElement('audio');
+        this.sound.src = src;
+        this.sound.setAttribute('preload', 'auto');
+        this.sound.setAttribute('controls', 'none');
+        this.sound.style.display = 'none';
+        document.body.appendChild(this.sound);
+    }
+
+    play() {
+        this.sound.play();
+    }
+
+    stop() {
+        this.sound.pause();
+    }
+}
+
+// Scene Layer class
+class SceneLayer {
+    constructor(name) {
+        this.name = name;
+        this.sprites = [];
+    }
+
+    addSprite(sprite) {
+        this.sprites.push(sprite);
+    }
+
+    removeSprite(sprite) {
+        const index = this.sprites.indexOf(sprite);
+        if (index !== -1) {
+            this.sprites.splice(index, 1);
+        }
+    }
+
+    render(renderer) {
+        this.sprites.forEach(sprite => {
+            renderer.drawSprite(sprite);
+        });
     }
 }
 
@@ -221,7 +359,23 @@ EngineCore.AssetManager = {
 
     init: function() {
         // Add initialization code here
+        this.loadAssets();
     },
+
+    loadAssets: function(assetData) {
+        // Load assets into the game using Engine
+        for (const assetName in assetData) {
+            if (assetData.hasOwnProperty(assetName)) {
+                const asset = assetData[assetName];
+                if (asset.type === 'image') {
+                    this.assets[assetName] = new Image();
+                    this.assets[assetName].src = asset.src;
+                } else if (asset.type === 'sound') {
+                    this.assets[assetName] = new Sound(asset.src);
+                }
+            }
+        }
+    },   
 
     loadAsset: function(assetType, assetName, assetPath) {
         switch (assetType) {
@@ -257,7 +411,14 @@ EngineCore.SceneManager = {
     currentScene: null,
 
     init: function() {
-        // Add initialization code here
+        // Add initialization for game
+        //loop through scenes and load them
+        for (const sceneName in this.scenes) {
+            if (this.scenes.hasOwnProperty(sceneName)) {
+                const scene = this.scenes[sceneName];
+                EngineCore.AssetManager.loadAsset('image', 'background', scene.background);
+            }
+        }
     },
 
     createScene: function(name, background) {
@@ -274,19 +435,9 @@ EngineCore.SceneManager = {
         }
     },
 
-    addLayerToScene: function(sceneName, layer) {
-        if (this.scenes[sceneName]) {
-            this.scenes[sceneName].addLayer(layer);
-        } else {
-            console.error(`Scene '${sceneName}' does not exist.`);
-        }
-    },
-
-    removeLayerFromScene: function(sceneName, layer) {
-        if (this.scenes[sceneName]) {
-            this.scenes[sceneName].removeLayer(layer);
-        } else {
-            console.error(`Scene '${sceneName}' does not exist.`);
+    update: function() {
+        if (this.currentScene) {
+            this.currentScene.executeScript(); // Execute scene-specific scripts
         }
     }
 };
@@ -295,6 +446,8 @@ EngineCore.SceneManager = {
 EngineCore.SceneEditor = {
     init: function() {
         // Add initialization code here
+        EngineCore.AssetManager.init();
+        EngineCore.SceneManager.init();
     },
 
     // Function to load a background image into the scene editor
@@ -389,6 +542,21 @@ EngineCore.SceneEditor = {
         }
     },
 
+    getCurrentScene: function() {
+        return EngineCore.SceneManager.currentScene;
+    },
+
+    selectSprite: function(sceneName, sprite) {
+        const scene = EngineCore.SceneManager.scenes[sceneName];
+        if (scene) {
+            // Functionality to track selected sprite within the scene
+        }
+    },
+
+    addInteractiveArea: function(sceneName, areaType, areaData) {
+        // Implement storing interactive area data within the scene
+    },
+
     // Function to import a scene from a compatible format (e.g., JSON)
     importScene: function(sceneData) {
         // Parse scene data and create Scene objects
@@ -396,26 +564,39 @@ EngineCore.SceneEditor = {
     }
 };
 
-// Initialize engine core modules
-EngineCore.init = function(canvasId) {
+//EngineCore Deserialize and Serialize game data
+EngineCore.serialize = function() {
+    return JSON.stringify(this.game);
+}
+
+EngineCore.deserialize = function(data) {
+    this.game = JSON.parse(data);
+}
+
+// Start the game loop
+EngineCore.start = function() {
+    function gameLoop() {
+        EngineCore.SceneManager.update(); // Update scene manager
+        EngineCore.game.update(); // Update the game logic
+        EngineCore.Renderer.clear();
+        if (EngineCore.SceneManager.currentScene) {
+            EngineCore.SceneManager.currentScene.render(EngineCore.Renderer); // Render the current scene
+        }
+        requestAnimationFrame(gameLoop);
+    }
+    gameLoop();
+};
+
+// EngineCore initialization
+EngineCore.init = function(canvasId, gameName) {
     EngineCore.Renderer.init(canvasId);
     EngineCore.InputManager.init();
     EngineCore.GameLogic.init();
     EngineCore.AssetManager.init();
     EngineCore.SceneManager.init();
-};
-
-// Start the game loop
-EngineCore.start = function() {
-    function gameLoop() {
-        EngineCore.SceneManager.update();
-        EngineCore.Renderer.clear();
-        if (EngineCore.SceneManager.currentScene) {
-            EngineCore.SceneManager.currentScene.render(EngineCore.Renderer);
-        }
-        requestAnimationFrame(gameLoop);
-    }
-    gameLoop();
+    
+    // Create an instance of the Game class
+    this.game = new Game(gameName);
 };
 
 // Expose EngineCore namespace

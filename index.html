@@ -7,28 +7,51 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <div class="toolbox" id="toolbox">
-                <h2>Sprite Library</h2>
-                <!-- Sprite library content goes here -->
-            </div>
-            <div class="inspector" id="inspector">
-                <h2>Inspector Panel</h2>
-                <!-- Inspector panel content goes here -->
-            </div>
+    <div id="sceneEditor">
+        <div id="canvasArea">
+            <!-- Background Display -->
+            <canvas id="sceneCanvas" width="800" height="600"></canvas>
+            <!-- Selection Indicator -->
+            <div id="selectionIndicator"></div>
         </div>
-        <div class="canvas-area" style="display: flex;flex-direction: column;">
-            <canvas id="sceneCanvas"></canvas>
-            <!-- Additional canvas elements for interactive areas, if needed -->
-            <div style="display: flex;flex-direction: row; margin:8px;">
-            <button>Run Game</button>
-            <button>Stop game</button>
+        <div id="toolbox">
+            <!-- Sprite Library -->
+            <h2>Sprite Library</h2>
+            <div id="spriteLibrary"></div>
+            <!-- Interactive Area Tools -->
+            <h2>Interactive Area Tools</h2>
+            <button id="rectangleTool">Rectangle Tool</button>
+            <button id="polygonTool">Polygon Tool</button>
+            <button id="imageMaskTool">Image Mask Tool</button>
         </div>
-        </div>
-        <div class="toolbar" id="toolbar">
-            <h2>Toolbox</h2>
-            <!-- Toolbox content goes here -->
+        <div id="inspector">
+            <!-- Selected Element -->
+            <h2>Inspector Panel</h2>
+            <p>Selected Sprite: <span id="selectedSpriteName">None</span></p>
+            <!-- Sprite Properties -->
+            <h3>Sprite Properties</h3>
+            <label for="spriteName">Name:</label>
+            <input type="text" id="spriteName" disabled>
+            <label for="spriteX">X Position:</label>
+            <input type="number" id="spriteX" disabled>
+            <label for="spriteY">Y Position:</label>
+            <input type="number" id="spriteY" disabled>
+            <!-- Layer Assignment Dropdown -->
+            <label for="layerDropdown">Layer:</label>
+            <select id="layerDropdown" disabled>
+                <option value="layer1">Layer 1</option>
+                <option value="layer2">Layer 2</option>
+                <!-- Add dynamically populated options for layers -->
+            </select>
+            <!-- Interactive Area Properties -->
+            <h3>Interactive Area Properties</h3>
+            <!-- Script Assignment Dropdown -->
+            <label for="scriptDropdown">Script:</label>
+            <select id="scriptDropdown" disabled>
+                <option value="script1">Script 1</option>
+                <option value="script2">Script 2</option>
+                <!-- Add dynamically populated options for scripts -->
+            </select>
         </div>
     </div>
     <script type="module" src="enginecore.js"></script>
